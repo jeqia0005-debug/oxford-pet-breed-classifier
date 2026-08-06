@@ -18,9 +18,18 @@ from pet_classifier.training.metrics import accuracy, topk_accuracy
 
 
 def get_device(prefer_cuda: bool = True) -> torch.device:
-    """Return CUDA if available (and preferred), else CPU."""
-    if prefer_cuda and torch.cuda.is_available():
+    """Return the best available accelerator, or CPU when forced/unavailable."""
+
+    if not prefer_cuda:
+        return torch.device("cpu")
+
+    if torch.cuda.is_available():
         return torch.device("cuda")
+
+    # Apple Silicon acceleration for macOS.
+    if hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
+        return torch.device("mps")
+
     return torch.device("cpu")
 
 
