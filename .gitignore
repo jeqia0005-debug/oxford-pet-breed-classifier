@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# uv / venv
+.venv/
+venv/
+
+# Dataset downloaded at runtime — see README (top-level data/ only,
+# anchored with a leading slash so it never matches src/pet_classifier/data).
+/data/
+!/data/.gitkeep
+
+# Trained model weights & experiment outputs (too large for git)
+*.pth
+*.pt
+*.ckpt
+/checkpoints/
+/runs/
+/outputs/
+!/checkpoints/.gitkeep
+
+# Generated figures / logs
+*.log
+/reports/figures/*.png
+!/reports/figures/.gitkeep
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+.ipynb_checkpoints/
