@@ -1,0 +1,25 @@
+# Frozen MobileNetV2 transfer-learning configuration (Member 2).
+
+data:
+  img_size: 224
+  val_fraction: 0.2
+  batch_size: 32
+  num_workers: 2
+
+model:
+  pretrained: true
+  dropout: 0.2
+
+training:
+  epochs: 20
+  lr: 0.001
+  weight_decay: 0.0001
+  label_smoothing: 0.1
+  monitor: val_acc
+
+  early_stopping:
+    patience: 5
+    mode: max
+
+checkpoint: checkpoints/mobilenet_frozen.pth
+report: reports/mobilenet_frozen_results.json
