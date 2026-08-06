@@ -1,0 +1,27 @@
+# Custom CNN baseline hyperparameters (Member 1).
+# Smaller image size than MobileNetV2 (224) keeps from-scratch training
+# tractable on CPU while remaining a fair baseline.
+
+data:
+  img_size: 160
+  val_fraction: 0.2
+  batch_size: 32
+  num_workers: 4
+
+model:
+  base_channels: 32
+  num_blocks: 4
+  dropout: 0.5
+  spatial_dropout: 0.1
+
+training:
+  epochs: 60
+  lr: 0.001
+  weight_decay: 0.0001
+  label_smoothing: 0.1
+  monitor: val_acc        # maximize validation accuracy
+  early_stopping:
+    patience: 10
+    mode: max
+
+checkpoint: checkpoints/custom_cnn.pth
