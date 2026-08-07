@@ -122,12 +122,25 @@ def main() -> None:
     metrics["img_size"] = dcfg["img_size"]
     metrics["epochs_run"] = len(history["train_loss"])
 
-    print("\n=== Custom CNN baseline (test set) ===")
-    print(f"  accuracy       : {metrics['accuracy']:.4f}")
-    print(f"  macro F1       : {metrics['macro_f1']:.4f}")
-    print(f"  top-3 accuracy : {metrics['top3_accuracy']:.4f}")
-    print(f"  best epoch     : {metrics['best_epoch']}  (of {metrics['epochs_run']} run)")
-    print(f"  best checkpoint: {ckpt_path}")
+    # Best-epoch validation metrics — reported alongside test so this baseline
+    # can be compared against the transfer-learning models on the same
+    # (validation) footing, with the test set reserved for final evaluation.
+    best_i = max(range(len(history["val_acc"])), key=lambda i: history["val_acc"][i])
+    metrics["val_accuracy"] = history["val_acc"][best_i]
+    metrics["val_top3_accuracy"] = history["val_topk"][best_i]
+    metrics["val_loss"] = history["val_loss"][best_i]
+
+    print("\n=== Custom CNN baseline ===")
+    print(f"  best epoch          : {metrics['best_epoch']}  (of {metrics['epochs_run']} run)")
+    print("  -- validation (for model comparison) --")
+    print(f"  val accuracy        : {metrics['val_accuracy']:.4f}")
+    print(f"  val top-3 accuracy  : {metrics['val_top3_accuracy']:.4f}")
+    print(f"  val loss            : {metrics['val_loss']:.4f}")
+    print("  -- held-out test set --")
+    print(f"  test accuracy       : {metrics['accuracy']:.4f}")
+    print(f"  test macro F1       : {metrics['macro_f1']:.4f}")
+    print(f"  test top-3 accuracy : {metrics['top3_accuracy']:.4f}")
+    print(f"  best checkpoint     : {ckpt_path}")
 
     results_path = FIGURE_DIR.parent / "custom_cnn_results.json"
     results_path.parent.mkdir(parents=True, exist_ok=True)
