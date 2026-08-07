@@ -13,6 +13,7 @@ Usage
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 
 import yaml
@@ -21,6 +22,7 @@ from pet_classifier.config import CHECKPOINT_DIR, DATA_DIR, FIGURE_DIR, ROOT_DIR
 from pet_classifier.data.dataset import build_data
 from pet_classifier.models.custom_cnn import CustomCNN, count_parameters
 from pet_classifier.training.early_stopping import EarlyStopping
+from pet_classifier.training.metrics import evaluate_classification
 from pet_classifier.training.trainer import Trainer, get_device
 from pet_classifier.utils.reproducibility import seed_everything
 from pet_classifier.utils.viz import plot_training_curves
@@ -111,12 +113,27 @@ def main() -> None:
     print(f"Saved training curves -> {curve_path}")
 
     # --- Baseline test evaluation -----------------------------------------
-    test_metrics = trainer.evaluate(data.test, desc="test")
+    # Load the best-validation checkpoint before the final test scoring so the
+    # reported baseline reflects the best model, not the last epoch.
+    ckpt = torch.load(ckpt_path, map_location=device)
+    model.load_state_dict(ckpt["model_state"])
+    metrics = evaluate_classification(model, data.test, device=device, topk=3)
+    metrics["best_epoch"] = ckpt.get("epoch")
+    metrics["img_size"] = dcfg["img_size"]
+    metrics["epochs_run"] = len(history["train_loss"])
+
     print("\n=== Custom CNN baseline (test set) ===")
-    print(f"  accuracy      : {test_metrics['acc']:.4f}")
-    print(f"  top-3 accuracy: {test_metrics['topk']:.4f}")
-    print(f"  loss          : {test_metrics['loss']:.4f}")
+    print(f"  accuracy       : {metrics['accuracy']:.4f}")
+    print(f"  macro F1       : {metrics['macro_f1']:.4f}")
+    print(f"  top-3 accuracy : {metrics['top3_accuracy']:.4f}")
+    print(f"  best epoch     : {metrics['best_epoch']}  (of {metrics['epochs_run']} run)")
     print(f"  best checkpoint: {ckpt_path}")
+
+    results_path = FIGURE_DIR.parent / "custom_cnn_results.json"
+    results_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(results_path, "w") as f:
+        json.dump({"model": "custom_cnn", **metrics}, f, indent=2)
+    print(f"  saved metrics  -> {results_path}")
 
 
 if __name__ == "__main__":
