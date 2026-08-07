@@ -13,13 +13,11 @@ dependencies = [
     "pillow>=10.2",
     "pyyaml>=6.0",
     "tqdm>=4.66",
+    "grad-cam>=1.5.5",
+    "streamlit>=1.61.1",
 ]
 
 [project.optional-dependencies]
-# Web demo (Member 3) — kept optional so the core pipeline installs lean.
-app = [
-    "streamlit>=1.33",
-]
 dev = [
     "pytest>=8.0",
 ]
