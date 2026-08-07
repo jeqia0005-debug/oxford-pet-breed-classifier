@@ -1,0 +1,13 @@
+{
+  "model": "custom_cnn",
+  "accuracy": 0.3376941946034342,
+  "macro_f1": 0.3137874091076658,
+  "top3_accuracy": 0.6061597165440175,
+  "num_samples": 3669,
+  "best_epoch": 56,
+  "img_size": 160,
+  "epochs_run": 60,
+  "val_accuracy": 0.38315217391304346,
+  "val_top3_accuracy": 0.6440217391304348,
+  "val_loss": 2.4981231689453125
+}
