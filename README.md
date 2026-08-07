@@ -126,6 +126,17 @@ The model includes:
 
 This model serves as the from-scratch baseline.
 
+**Results** (160 × 160, 60 epochs, best epoch 56):
+
+| Split | Accuracy | Top-3 Accuracy | Macro F1 |
+|---|---:|---:|---:|
+| Validation | 38.32% | 64.40% | — |
+| Test | 33.77% | 60.62% | 31.38% |
+
+Training and validation curves are healthy (no overfitting; validation accuracy
+was still rising at epoch 60). Full details in
+`reports/member1_custom_cnn_summary.md` and `reports/custom_cnn_results.json`.
+
 ### 2. Frozen MobileNetV2
 
 An ImageNet-pretrained MobileNetV2 is used as a fixed feature extractor.
@@ -179,6 +190,25 @@ The **test set was not used for model selection** and is reserved for the
 team's final evaluation stage.
 
 Detailed experiment summaries are available in `reports/`.
+
+## Model Comparison
+
+Headline comparison of the three model types on the **validation** split (the
+test set is reserved for final evaluation). Full transfer-learning experiments
+are in the *MobileNetV2 Experiments* section above.
+
+| Model | Pretraining | Validation Accuracy | Top-3 Accuracy |
+|---|---|---:|---:|
+| Custom CNN (from scratch) | None | 38.32% | 64.40% |
+| Fine-tuned MobileNetV2 (best trial) | ImageNet | 92.66% | 99.05% |
+| **Frozen MobileNetV2** | ImageNet | **93.48%** | **99.05%** |
+
+Transfer learning lifts validation accuracy from **38.32%** (trained from
+scratch) to **93.48%** (frozen ImageNet features) — a gain of roughly **55
+percentage points**. This is the project's central finding: on a small,
+fine-grained dataset, pretrained ImageNet representations transfer far more
+effectively than features learned from scratch, and freezing the backbone even
+outperforms fine-tuning it.
 
 ## Evaluation
 
