@@ -1,0 +1,27 @@
+# Very conservative MobileNetV2 fine-tuning trial.
+
+data:
+  img_size: 224
+  val_fraction: 0.2
+  batch_size: 32
+  num_workers: 2
+
+model:
+  dropout: 0.2
+  unfreeze_last_blocks: 1
+
+training:
+  epochs: 8
+  backbone_lr: 0.000001
+  classifier_lr: 0.00001
+  weight_decay: 0.0001
+  label_smoothing: 0.1
+  monitor: val_acc
+
+  early_stopping:
+    patience: 4
+    mode: max
+
+initial_checkpoint: checkpoints/mobilenet_frozen.pth
+checkpoint: checkpoints/mobilenet_finetuned_v3.pth
+report: reports/mobilenet_finetuned_v3_results.json

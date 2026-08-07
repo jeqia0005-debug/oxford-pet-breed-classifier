@@ -1,0 +1,32 @@
+# Conservative partial MobileNetV2 fine-tuning trial.
+
+data:
+  img_size: 224
+  val_fraction: 0.2
+  batch_size: 32
+  num_workers: 2
+
+model:
+  dropout: 0.2
+
+  # Trial 1 used 4 blocks. Trial 2 updates fewer backbone layers.
+  unfreeze_last_blocks: 2
+
+training:
+  epochs: 10
+
+  # Use smaller learning rates to avoid damaging pretrained features.
+  backbone_lr: 0.000005
+  classifier_lr: 0.00005
+
+  weight_decay: 0.0001
+  label_smoothing: 0.1
+  monitor: val_acc
+
+  early_stopping:
+    patience: 4
+    mode: max
+
+initial_checkpoint: checkpoints/mobilenet_frozen.pth
+checkpoint: checkpoints/mobilenet_finetuned_v2.pth
+report: reports/mobilenet_finetuned_v2_results.json

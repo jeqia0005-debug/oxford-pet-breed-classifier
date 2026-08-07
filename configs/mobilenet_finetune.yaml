@@ -1,0 +1,32 @@
+# Partial MobileNetV2 fine-tuning configuration.
+
+data:
+  img_size: 224
+  val_fraction: 0.2
+  batch_size: 32
+  num_workers: 2
+
+model:
+  dropout: 0.2
+  unfreeze_last_blocks: 4
+
+training:
+  epochs: 15
+
+  # Use a smaller learning rate for pretrained convolutional layers.
+  backbone_lr: 0.00001
+
+  # The classification head can use a slightly larger learning rate.
+  classifier_lr: 0.0001
+
+  weight_decay: 0.0001
+  label_smoothing: 0.1
+  monitor: val_acc
+
+  early_stopping:
+    patience: 5
+    mode: max
+
+initial_checkpoint: checkpoints/mobilenet_frozen.pth
+checkpoint: checkpoints/mobilenet_finetuned.pth
+report: reports/mobilenet_finetuned_results.json
