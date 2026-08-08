@@ -210,22 +210,48 @@ fine-grained dataset, pretrained ImageNet representations transfer far more
 effectively than features learned from scratch, and freezing the backbone even
 outperforms fine-tuning it.
 
-## Evaluation
+## Final Test-Set Evaluation
 
-The final evaluation will include:
+The held-out test set (never used for model selection) was evaluated with
+`scripts/evaluate_model.py` (Member 3). Test-set results for the two headline
+models:
 
-- Top-1 accuracy
-- Macro F1-score
-- Top-3 accuracy
-- Confusion matrix
-- Per-class performance
-- Training and validation curves
-- Error analysis
-- Grad-CAM visualizations
+| Model | Test Accuracy | Test Macro F1 | Test Top-3 |
+|---|---:|---:|---:|
+| Custom CNN (from scratch) | 33.77% | 31.38% | 60.62% |
+| **Frozen MobileNetV2** | **89.86%** | **89.82%** | **98.39%** |
 
-Grad-CAM will be used to examine which image regions influence model
-predictions and whether the classifier focuses on meaningful breed-specific
-features or potentially misleading background information.
+On the held-out test set the frozen MobileNetV2 reaches **89.86%** top-1
+accuracy (vs. 93.48% on validation — a normal generalization gap) and **98.39%**
+top-3, compared with **33.77%** for the from-scratch CNN. This confirms the
+project's central finding on unseen data: transfer learning from ImageNet
+features is decisive on this small, fine-grained dataset.
+
+### Most-confused breed pairs
+
+The model's errors concentrate on genuinely similar breeds — the same ones
+humans confuse:
+
+| True breed | Predicted as | Count |
+|---|---|---:|
+| Birman | Ragdoll | 22 |
+| Egyptian Mau | Bengal | 17 |
+| Ragdoll | Birman | 16 |
+| Staffordshire Bull Terrier | American Pit Bull Terrier | 15 |
+| American Pit Bull Terrier | American Bulldog | 14 |
+| Maine Coon | Bengal | 12 |
+
+Birman/Ragdoll are both colour-point long-haired cats; Egyptian Mau, Bengal and
+Maine Coon are spotted/tabby cats; and the Staffordshire Bull Terrier /
+American Pit Bull Terrier / American Bulldog cluster are visually near-identical
+"bully" breeds. That the mistakes fall on these look-alikes indicates the model
+learned meaningful breed features rather than spurious background cues.
+
+The confusion matrix, Grad-CAM overlays, and a correct/incorrect prediction
+gallery are produced by `scripts/evaluate_model.py` and saved under
+`reports/figures/`; see `reports/member3_evaluation_summary.md`. Grad-CAM is
+used to verify the classifier attends to the animal rather than the background,
+and it powers the interactive web demo.
 
 ## Reproducibility
 

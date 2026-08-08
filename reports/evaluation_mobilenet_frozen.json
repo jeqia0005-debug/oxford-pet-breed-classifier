@@ -1,0 +1,19 @@
+{
+  "checkpoint": "checkpoints/mobilenet_frozen.pth",
+  "architecture": "mobilenet_v2",
+  "split": "test",
+  "num_samples": 3669,
+  "top1_accuracy": 0.8986,
+  "top3_accuracy": 0.9839,
+  "macro_f1": 0.8982,
+  "most_confused_pairs": [
+    {"true_breed": "Birman", "predicted_breed": "Ragdoll", "count": 22},
+    {"true_breed": "Egyptian Mau", "predicted_breed": "Bengal", "count": 17},
+    {"true_breed": "Ragdoll", "predicted_breed": "Birman", "count": 16},
+    {"true_breed": "Staffordshire Bull Terrier", "predicted_breed": "American Pit Bull Terrier", "count": 15},
+    {"true_breed": "American Pit Bull Terrier", "predicted_breed": "American Bulldog", "count": 14},
+    {"true_breed": "Maine Coon", "predicted_breed": "Bengal", "count": 12},
+    {"true_breed": "American Pit Bull Terrier", "predicted_breed": "Staffordshire Bull Terrier", "count": 12},
+    {"true_breed": "Staffordshire Bull Terrier", "predicted_breed": "American Bulldog", "count": 11}
+  ]
+}
