@@ -33,7 +33,7 @@ with Grad-CAM explanations.
 # https://docs.astral.sh/uv/
 
 # 2. Create the environment and install dependencies
-uv sync
+uv sync --extra dev
 
 # 3. Explore the dataset
 uv run python scripts/explore_data.py
@@ -212,9 +212,10 @@ outperforms fine-tuning it.
 
 ## Final Test-Set Evaluation
 
-The held-out test set (never used for model selection) was evaluated with
-`scripts/evaluate_model.py` (Member 3). Test-set results for the two headline
-models:
+Final held-out test-set results are reported for both headline models.
+Frozen MobileNetV2 was evaluated with `scripts/evaluate_model.py`, while the
+Custom CNN test metrics were recorded by its training pipeline in
+`scripts/train_custom_cnn.py`.
 
 | Model | Test Accuracy | Test Macro F1 | Test Top-3 |
 |---|---:|---:|---:|

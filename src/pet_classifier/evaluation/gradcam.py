@@ -62,7 +62,8 @@ class GradCAMExplainer:
         # pass, without touching any parameter's requires_grad flag.
         batch.requires_grad_(True)
 
-        targets = [ClassifierOutputTarget(target_class or predicted)]
+        target = predicted if target_class is None else target_class
+        targets = [ClassifierOutputTarget(target)]
         grayscale_cam = self.cam(input_tensor=batch, targets=targets)[0]  # (H, W)
 
         rgb_image = denormalize(image_tensor).permute(1, 2, 0).cpu().numpy()
